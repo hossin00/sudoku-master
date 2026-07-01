@@ -62,27 +62,31 @@ class SudokuBoard extends ConsumerWidget {
   ) {
     return Column(
       children: List.generate(9, (row) {
-        return Row(
-          children: List.generate(9, (col) {
-            final cell = board[row][col];
-            final isSelected = selected?.row == row && selected?.col == col;
-            final isPeer = selected != null &&
-                (selected.row == row ||
-                    selected.col == col ||
-                    (selected.row ~/ 3 == row ~/ 3 && selected.col ~/ 3 == col ~/ 3));
-            final isSameNumber = selectedValue != 0 && cell.value == selectedValue;
-            return GestureDetector(
-              onTap: () => ref.read(gameProvider.notifier).selectCell(row, col),
-              child: _SudokuCellWidget(
-                cell: cell,
-                size: cellSize,
-                isSelected: isSelected,
-                isPeer: isPeer,
-                isSameNumber: isSameNumber,
-                settings: settings,
-              ),
-            );
-          }),
+        return Expanded(
+          child: Row(
+            children: List.generate(9, (col) {
+              final cell = board[row][col];
+              final isSelected = selected?.row == row && selected?.col == col;
+              final isPeer = selected != null &&
+                  (selected.row == row ||
+                      selected.col == col ||
+                      (selected.row ~/ 3 == row ~/ 3 && selected.col ~/ 3 == col ~/ 3));
+              final isSameNumber = selectedValue != 0 && cell.value == selectedValue;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => ref.read(gameProvider.notifier).selectCell(row, col),
+                  child: _SudokuCellWidget(
+                    cell: cell,
+                    size: cellSize,
+                    isSelected: isSelected,
+                    isPeer: isPeer,
+                    isSameNumber: isSameNumber,
+                    settings: settings,
+                  ),
+                ),
+              );
+            }),
+          ),
         );
       }),
     );
@@ -164,8 +168,6 @@ class _SudokuCellWidget extends StatelessWidget {
     }
 
     return Container(
-      width: size,
-      height: size,
       color: bgColor,
       alignment: Alignment.center,
       child: cell.value == 0
