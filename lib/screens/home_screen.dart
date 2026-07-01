@@ -7,9 +7,9 @@ import '../providers/game_provider.dart';
 import '../providers/stats_provider.dart';
 import '../providers/storage_provider.dart';
 import '../utils/formatters.dart';
-import '../widgets/app_logo.dart';
 import '../widgets/glow_card.dart';
 import '../widgets/gradient_button.dart';
+import '../widgets/icon_logo.dart';
 import 'achievements_screen.dart';
 import 'daily_challenge_screen.dart';
 import 'game_screen.dart';
@@ -61,7 +61,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 _buildTopBar(),
                 const SizedBox(height: 20),
-                Center(child: const AppLogo(size: 110)),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.blue.withOpacity(0.35),
+                          blurRadius: 30,
+                          spreadRadius: 2,
+                        ),
+                        BoxShadow(
+                          color: AppColors.gold.withOpacity(0.2),
+                          blurRadius: 40,
+                        ),
+                      ],
+                    ),
+                    child: const IconLogo(size: 100, borderRadius: 24),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 Center(
                   child: ShaderMask(
