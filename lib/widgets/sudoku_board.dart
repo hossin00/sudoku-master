@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/theme/app_theme.dart';
+import '../models/game_state.dart';
 import '../models/settings.dart';
 import '../models/sudoku_cell.dart';
 import '../providers/game_provider.dart';
@@ -14,7 +15,7 @@ class SudokuBoard extends ConsumerWidget {
     final game = ref.watch(gameProvider);
     if (game == null) return const SizedBox.shrink();
     final settings = ref.watch(settingsProvider);
-    final selected = ref.read(gameProvider.notifier).selected;
+    final selected = game.selected;
 
     final selectedValue = selected != null
         ? game.board[selected.row][selected.col].value

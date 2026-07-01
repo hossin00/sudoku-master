@@ -11,7 +11,7 @@ class NumberPad extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final game = ref.watch(gameProvider);
     if (game == null) return const SizedBox.shrink();
-    final notesMode = ref.read(gameProvider.notifier).notesMode;
+    final notesMode = game.notesMode;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),

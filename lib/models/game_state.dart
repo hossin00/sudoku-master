@@ -1,6 +1,17 @@
 import 'sudoku_cell.dart';
 import 'difficulty.dart';
 
+class SelectedCell {
+  final int row;
+  final int col;
+  const SelectedCell(this.row, this.col);
+
+  Map<String, dynamic> toJson() => {'row': row, 'col': col};
+
+  factory SelectedCell.fromJson(Map<String, dynamic> json) =>
+      SelectedCell(json['row'] as int, json['col'] as int);
+}
+
 class GameState {
   final List<List<SudokuCell>> board;
   final Difficulty difficulty;
@@ -13,6 +24,8 @@ class GameState {
   final List<Move> moveHistory;
   final bool isDailyChallenge;
   final String? dailyDate;
+  final SelectedCell? selected;
+  final bool notesMode;
 
   GameState({
     required this.board,
@@ -26,6 +39,8 @@ class GameState {
     List<Move>? moveHistory,
     this.isDailyChallenge = false,
     this.dailyDate,
+    this.selected,
+    this.notesMode = false,
   }) : moveHistory = moveHistory ?? <Move>[];
 
   GameState copyWith({
@@ -40,6 +55,9 @@ class GameState {
     List<Move>? moveHistory,
     bool? isDailyChallenge,
     String? dailyDate,
+    SelectedCell? selected,
+    bool clearSelected = false,
+    bool? notesMode,
   }) {
     return GameState(
       board: board ?? this.board,
@@ -53,6 +71,8 @@ class GameState {
       moveHistory: moveHistory ?? this.moveHistory,
       isDailyChallenge: isDailyChallenge ?? this.isDailyChallenge,
       dailyDate: dailyDate ?? this.dailyDate,
+      selected: clearSelected ? null : (selected ?? this.selected),
+      notesMode: notesMode ?? this.notesMode,
     );
   }
 
@@ -68,6 +88,8 @@ class GameState {
         'moveHistory': moveHistory.map((m) => m.toJson()).toList(),
         'isDailyChallenge': isDailyChallenge,
         'dailyDate': dailyDate,
+        'selected': selected?.toJson(),
+        'notesMode': notesMode,
       };
 
   factory GameState.fromJson(Map<String, dynamic> json) {
@@ -92,6 +114,10 @@ class GameState {
           <Move>[],
       isDailyChallenge: json['isDailyChallenge'] as bool? ?? false,
       dailyDate: json['dailyDate'] as String?,
+      selected: json['selected'] != null
+          ? SelectedCell.fromJson(Map<String, dynamic>.from(json['selected'] as Map))
+          : null,
+      notesMode: json['notesMode'] as bool? ?? false,
     );
   }
 }

@@ -141,28 +141,44 @@ class GameScreen extends ConsumerWidget {
         body: Container(
           decoration: const BoxDecoration(gradient: AppColors.darkGradient),
           child: SafeArea(
-            child: Column(
-              children: [
-                _buildHeader(context, ref, game, settings),
-                const SizedBox(height: 12),
-                _buildInfoBar(game, settings),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: const SudokuBoard(),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                _buildActionRow(context, ref, game),
-                const SizedBox(height: 14),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: const NumberPad(),
-                ),
-                const Spacer(),
-              ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxW = constraints.maxWidth;
+                final maxH = constraints.maxHeight;
+                final boardMaxSize = (maxW < 600
+                        ? maxW - 24
+                        : (maxW * 0.7).clamp(360.0, maxH * 0.6))
+                    .toDouble();
+                final horizontalPad = ((maxW - boardMaxSize) / 2).clamp(8.0, 80.0);
+                return Column(
+                  children: [
+                    _buildHeader(context, ref, game, settings),
+                    const SizedBox(height: 8),
+                    _buildInfoBar(game, settings),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: horizontalPad),
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: const SudokuBoard(),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: (horizontalPad - 4).clamp(4.0, 76.0)),
+                      child: _buildActionRow(context, ref, game),
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: (horizontalPad - 6).clamp(2.0, 74.0)),
+                      child: const NumberPad(),
+                    ),
+                    const Spacer(),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -259,10 +275,8 @@ class GameScreen extends ConsumerWidget {
   }
 
   Widget _buildActionRow(BuildContext context, WidgetRef ref, game) {
-    final notesMode = ref.read(gameProvider.notifier).notesMode;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Row(
+    final notesMode = game.notesMode as bool;
+    return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _actionButton(
@@ -304,8 +318,7 @@ class GameScreen extends ConsumerWidget {
             },
           ),
         ],
-      ),
-    );
+      );
   }
 
   Widget _actionButton({

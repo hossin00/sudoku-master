@@ -11,22 +11,11 @@ import 'achievements_provider.dart';
 import 'stats_provider.dart';
 import 'storage_provider.dart';
 
-class SelectedCell {
-  final int row;
-  final int col;
-  const SelectedCell(this.row, this.col);
-}
-
 class GameNotifier extends StateNotifier<GameState?> {
   GameNotifier(this._ref) : super(null);
 
   final Ref _ref;
   Timer? _timer;
-  bool _notesMode = false;
-  SelectedCell? _selected;
-
-  bool get notesMode => _notesMode;
-  SelectedCell? get selected => _selected;
 
   void _startTimer() {
     _timer?.cancel();
@@ -53,8 +42,6 @@ class GameNotifier extends StateNotifier<GameState?> {
       difficulty: difficulty,
       startedAt: DateTime.now(),
     );
-    _selected = null;
-    _notesMode = false;
     await _ref.read(statsProvider.notifier).recordGameStarted(difficulty);
     _autoSave();
     _startTimer();
@@ -70,8 +57,6 @@ class GameNotifier extends StateNotifier<GameState?> {
       isDailyChallenge: true,
       dailyDate: dateKey,
     );
-    _selected = null;
-    _notesMode = false;
     await _ref.read(statsProvider.notifier).recordGameStarted(Difficulty.medium);
     _autoSave();
     _startTimer();
@@ -86,13 +71,15 @@ class GameNotifier extends StateNotifier<GameState?> {
   }
 
   void selectCell(int row, int col) {
-    _selected = SelectedCell(row, col);
-    state = state?.copyWith();
+    final current = state;
+    if (current == null) return;
+    state = current.copyWith(selected: SelectedCell(row, col));
   }
 
   void toggleNotesMode() {
-    _notesMode = !_notesMode;
-    state = state?.copyWith();
+    final current = state;
+    if (current == null) return;
+    state = current.copyWith(notesMode: !current.notesMode);
   }
 
   void pause() {
@@ -111,13 +98,14 @@ class GameNotifier extends StateNotifier<GameState?> {
 
   void enterNumber(int number) {
     final current = state;
-    final sel = _selected;
-    if (current == null || sel == null || current.isCompleted || current.isPaused) return;
+    if (current == null || current.isCompleted || current.isPaused) return;
+    final sel = current.selected;
+    if (sel == null) return;
 
     final cell = current.board[sel.row][sel.col];
     if (cell.isGiven) return;
 
-    if (_notesMode) {
+    if (current.notesMode) {
       _toggleNote(sel.row, sel.col, number);
     } else {
       _placeValue(sel.row, sel.col, number);
@@ -127,8 +115,12 @@ class GameNotifier extends StateNotifier<GameState?> {
   void _placeValue(int row, int col, int value) {
     final current = state!;
     final cell = current.board[row][col];
-    if (cell.value == value) {
+
+    if (value != 0 && cell.value == value) {
       _placeValue(row, col, 0);
+      return;
+    }
+    if (value == 0 && cell.value == 0) {
       return;
     }
 
@@ -217,7 +209,9 @@ class GameNotifier extends StateNotifier<GameState?> {
   }
 
   void clearCell() {
-    final sel = _selected;
+    final current = state;
+    if (current == null) return;
+    final sel = current.selected;
     if (sel == null) return;
     _placeValue(sel.row, sel.col, 0);
   }
@@ -255,11 +249,12 @@ class GameNotifier extends StateNotifier<GameState?> {
     }
     if (emptyCells.isEmpty) return false;
 
-    final target = _selected != null &&
-            (current.board[_selected!.row][_selected!.col].isEmpty ||
-                current.board[_selected!.row][_selected!.col].value !=
-                    current.board[_selected!.row][_selected!.col].solution)
-        ? _selected!
+    final sel = current.selected;
+    final target = sel != null &&
+            (current.board[sel.row][sel.col].isEmpty ||
+                current.board[sel.row][sel.col].value !=
+                    current.board[sel.row][sel.col].solution)
+        ? sel
         : emptyCells.first;
 
     final solutionVal = current.board[target.row][target.col].solution;
@@ -335,8 +330,6 @@ class GameNotifier extends StateNotifier<GameState?> {
     _timer?.cancel();
     await _ref.read(storageServiceProvider).clearCurrentGame();
     state = null;
-    _selected = null;
-    _notesMode = false;
   }
 
   @override
