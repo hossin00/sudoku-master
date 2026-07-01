@@ -67,7 +67,6 @@ class _SplashScreenState extends State<SplashScreen>
                       width: 140,
                       height: 140,
                       decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
                         borderRadius: BorderRadius.circular(32),
                         boxShadow: [
                           BoxShadow(
@@ -82,21 +81,13 @@ class _SplashScreenState extends State<SplashScreen>
                           ),
                         ],
                       ),
-                      child: Center(
-                        child: Text(
-                          '9',
-                          style: TextStyle(
-                            fontSize: 82,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: -3,
-                            shadows: [
-                              Shadow(
-                                color: AppColors.gold.withOpacity(0.8),
-                                blurRadius: 18,
-                              ),
-                            ],
-                          ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(32),
+                        child: Image.asset(
+                          'assets/icon/icon.png',
+                          width: 140,
+                          height: 140,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     );

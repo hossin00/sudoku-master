@@ -22,7 +22,8 @@
       "PowerShell(flutter run *)",
       "Bash(git commit -m 'Add animated splash screen, fix board layout, remove Flutter startup flash *)",
       "Bash(git push *)",
-      "Bash(git commit -m 'Fix number input reactivity and tablet layout *)"
+      "Bash(git commit -m 'Fix number input reactivity and tablet layout *)",
+      "Bash(git commit *)"
     ]
   }
 }
