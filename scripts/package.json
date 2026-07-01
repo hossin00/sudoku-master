@@ -1,0 +1,13 @@
+{
+  "name": "sudoku-master-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "keystore": "node generate-keystore.js",
+    "icon": "node generate-icon.js"
+  },
+  "dependencies": {
+    "libsodium-wrappers": "^0.8.4",
+    "node-forge": "^1.3.1"
+  }
+}

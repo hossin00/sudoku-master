@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter *)",
+      "Bash(where node *)",
+      "Bash(where git *)",
+      "Bash(where flutter *)",
+      "Bash(node scripts/generate-icon.js)",
+      "Bash(npm install *)",
+      "Bash(node generate-keystore.js)",
+      "Bash(git init *)",
+      "Bash(git checkout *)",
+      "Bash(git config *)",
+      "Bash(git add *)"
+    ]
+  }
+}
