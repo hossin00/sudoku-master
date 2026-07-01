@@ -59,65 +59,30 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AnimatedBuilder(
-                  animation: _glow,
-                  builder: (context, _) {
-                    final t = _glow.value;
-                    return Container(
-                      width: 140,
-                      height: 140,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.blue.withOpacity(0.4 + 0.35 * t),
-                            blurRadius: 40 + 20 * t,
-                            spreadRadius: 4 + 4 * t,
-                          ),
-                          BoxShadow(
-                            color: AppColors.gold.withOpacity(0.25 + 0.25 * t),
-                            blurRadius: 60,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(32),
-                        child: Image.asset(
-                          'assets/icon/icon.png',
-                          width: 140,
-                          height: 140,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 32),
                 ShaderMask(
                   shaderCallback: (bounds) =>
                       AppColors.primaryGradient.createShader(bounds),
                   child: const Text(
                     'Sudoku Master',
                     style: TextStyle(
-                      fontSize: 34,
+                      fontSize: 38,
                       fontWeight: FontWeight.w800,
                       color: Colors.white,
                       letterSpacing: -0.5,
                     ),
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
                 const Text(
                   '2026 EDITION',
                   style: TextStyle(
                     color: AppColors.gold,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 4,
                   ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 56),
                 SizedBox(
                   width: 40,
                   height: 40,
